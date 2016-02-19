@@ -145,7 +145,6 @@ public class ServerGui extends javax.swing.JFrame {
             StyleConstants.setBackground(style, Color.decode("#fff176"));
             StyleConstants.setBold(style, true);
             doc.insertString(doc.getLength(), "\n" + sendMessage, style);
-//            txtShow.setText(txtShow.getText().trim() + "\n" + sendMessage);
             send.writeUTF(sendMessage + "\n");
         } catch (IOException ex) {
             Logger.getLogger(ClientGui.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,18 +160,20 @@ public class ServerGui extends javax.swing.JFrame {
         String path = file.getAbsolutePath();
         if (jFileChooser1.APPROVE_OPTION == value) {
             try {
+                System.out.println(path);
                 send.writeBytes("file\n");
                 send.writeBytes(path + "\n");
                 StyleConstants.setBackground(style, Color.decode("#fff176"));
                 StyleConstants.setBold(style, true);
+                System.out.println(path.substring(path.length() - 3, path.length()));
                 if ((path.substring(path.length() - 3, path.length()).equalsIgnoreCase("jpg")) || (path.substring(path.length() - 3, path.length()).equalsIgnoreCase("png"))) {
+                    System.out.println("image");
                     BufferedImage image = ImageIO.read(new File(path));
                     ImageIO.write(image, path.substring(path.length() - 3, path.length()), socket.getOutputStream());
                      doc.insertString(doc.getLength(), "\n Send Success" , style);
                 } else {
                     doc.insertString(doc.getLength(), "\n" + new ManageFile().sendFile(path, inputFile, send), style);
                 }
-                //                txtShow.setText(txtShow.getText().trim() + "\n" + new ManageFile().sendFile(path, inputFile, send));
             } catch (IOException ex) {
                 Logger.getLogger(ServerGui.class.getName()).log(Level.SEVERE, null, ex);
             } catch (BadLocationException ex) {
@@ -196,7 +197,6 @@ public class ServerGui extends javax.swing.JFrame {
                 StyleConstants.setBackground(style, Color.decode("#fff176"));
                 StyleConstants.setBold(style, true);
                 doc.insertString(doc.getLength(), "\n" + sendMessage, style);
-//                txtShow.setText(txtShow.getText().trim() + "\n" + sendMessage);
                 send.writeUTF(sendMessage + "\n");
             } catch (IOException ex) {
                 Logger.getLogger(ClientGui.class.getName()).log(Level.SEVERE, null, ex);
@@ -258,7 +258,6 @@ public class ServerGui extends javax.swing.JFrame {
                 
                 if ((fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("jpg")) || (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("png"))) {
                     BufferedImage image = ImageIO.read(ImageIO.createImageInputStream(socket.getInputStream()));
-                    //            BufferedImage image = ImageIO.read(socket.getInputStream());
                     File outputfile = new File(fileName);
                     ImageIO.write(image, fileName.substring(fileName.length() - 3, fileName.length()), outputfile);
                     
@@ -267,13 +266,11 @@ public class ServerGui extends javax.swing.JFrame {
                     StyleConstants.setBackground(style, Color.decode("#80deea"));
                     StyleConstants.setBold(style, true);
                     doc.insertString(doc.getLength(), "\n Server : ได้รับรูป ", style);
-//                    txtShow.setText(txtShow.getText().trim() + "\n" + "Server : ได้รับรูป");
                 } else {
                     System.out.println(new ManageFile().reseivedFile(fileName, send, inputFile));
                     StyleConstants.setBackground(style, Color.decode("#80deea"));
                     StyleConstants.setBold(style, true);
                     doc.insertString(doc.getLength(), "\n Server : ได้รับไฟล์จาก ", style);
-//                    txtShow.setText(txtShow.getText().trim() + "\n" + "Server : ได้รับไฟล์");
                 }
                 continue;
             }
@@ -281,7 +278,6 @@ public class ServerGui extends javax.swing.JFrame {
             StyleConstants.setBackground(style, Color.decode("#80deea"));
             StyleConstants.setBold(style, true);
             doc.insertString(doc.getLength(), "\n Server : " + message, style);
-//            txtShow.setText(txtShow.getText().trim() + "\n" + message);
         }
     }
 
