@@ -128,7 +128,7 @@ public class TestSendImageGui extends javax.swing.JFrame {
             }
         });
         
-        socket = new Socket("192.168.10.233", 1111);
+        socket = new Socket("192.168.10.194", 1111);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

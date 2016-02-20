@@ -26,11 +26,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import static th.co.best.gui.ClientGui.inputFile;
-import static th.co.best.gui.ClientGui.resived;
-import static th.co.best.gui.ClientGui.send;
-import static th.co.best.gui.ClientGui.socket;
-import static th.co.best.gui.ClientGui.style;
 import static th.co.best.gui.TestSendImageGui.socket;
 
 /**
@@ -147,7 +142,7 @@ public class ServerGui extends javax.swing.JFrame {
             doc.insertString(doc.getLength(), "\n" + sendMessage, style);
             send.writeUTF(sendMessage + "\n");
         } catch (IOException ex) {
-            Logger.getLogger(ClientGui.class.getName()).log(Level.SEVERE, null, ex);
+         
         } catch (BadLocationException ex) {
             Logger.getLogger(ServerGui.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,7 +156,7 @@ public class ServerGui extends javax.swing.JFrame {
         if (jFileChooser1.APPROVE_OPTION == value) {
             try {
                 System.out.println(path);
-                send.writeBytes("file\n");
+                send.writeBytes("1111file\n");
                 send.writeBytes(path + "\n");
                 StyleConstants.setBackground(style, Color.decode("#fff176"));
                 StyleConstants.setBold(style, true);
@@ -169,8 +164,16 @@ public class ServerGui extends javax.swing.JFrame {
                 if ((path.substring(path.length() - 3, path.length()).equalsIgnoreCase("jpg")) || (path.substring(path.length() - 3, path.length()).equalsIgnoreCase("png"))) {
                     System.out.println("image");
                     BufferedImage image = ImageIO.read(new File(path));
-                    ImageIO.write(image, path.substring(path.length() - 3, path.length()), socket.getOutputStream());
-                     doc.insertString(doc.getLength(), "\n Send Success" , style);
+                    if (image != null) {
+                        System.out.println(image);
+                        ImageIO.write(image, "png", socket.getOutputStream());
+                    }
+                    //                    if ("jpg".equalsIgnoreCase(path.substring(path.length() - 3, path.length()))) {
+////                        ImageIO.write(image, path.substring(path.length() - 3, path.length()), socket.getOutputStream());
+//                        ImageIO.write(image,"jpg", socket.getOutputStream());
+//                    }
+//                    send.writeBytes(path);
+                    doc.insertString(doc.getLength(), "\n Send Success", style);
                 } else {
                     doc.insertString(doc.getLength(), "\n" + new ManageFile().sendFile(path, inputFile, send), style);
                 }
@@ -199,7 +202,7 @@ public class ServerGui extends javax.swing.JFrame {
                 doc.insertString(doc.getLength(), "\n" + sendMessage, style);
                 send.writeUTF(sendMessage + "\n");
             } catch (IOException ex) {
-                Logger.getLogger(ClientGui.class.getName()).log(Level.SEVERE, null, ex);
+              
             } catch (BadLocationException ex) {
                 Logger.getLogger(ServerGui.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -255,12 +258,12 @@ public class ServerGui extends javax.swing.JFrame {
             if (message.equals("file")) {
                 String fileName = resived.readLine();
                 fileName = "F:\\" + new ManageFile().findName(fileName);
-                
+
                 if ((fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("jpg")) || (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("png"))) {
                     BufferedImage image = ImageIO.read(ImageIO.createImageInputStream(socket.getInputStream()));
                     File outputfile = new File(fileName);
                     ImageIO.write(image, fileName.substring(fileName.length() - 3, fileName.length()), outputfile);
-                    
+//                       ImageIO.write(image, "png", outputfile);
                     FromDialogShowImage dialogShowImage = new FromDialogShowImage(fileName);
                     dialogShowImage.setVisible(true);
                     StyleConstants.setBackground(style, Color.decode("#80deea"));
