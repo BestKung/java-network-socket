@@ -3,10 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/vViRuSs/Documents/NetBeansProjects/java-network-socket/src/th/co/best/gui/TestSendImageGui.java</file>
             <file>file:/C:/Users/vViRuSs/Documents/NetBeansProjects/java-network-socket/src/th/co/best/gui/ServerGui.java</file>
             <file>file:/C:/Users/vViRuSs/Documents/NetBeansProjects/java-network-socket/src/th/co/best/gui/TestSendImageClient.java</file>
             <file>file:/C:/Users/vViRuSs/Documents/NetBeansProjects/java-network-socket/src/th/co/best/gui/ManageFile.java</file>
+=======
+            <file>file:/C:/Users/BestKung/Documents/NetBeansProjects/JavaNetWork/src/th/co/best/gui/ClientGui.java</file>
+            <file>file:/C:/Users/BestKung/Documents/NetBeansProjects/JavaNetWork/src/th/co/best/gui/ServerGui.java</file>
+            <file>file:/C:/Users/BestKung/Documents/NetBeansProjects/JavaNetWork/src/th/co/best/gui/ManageFile.java</file>
+>>>>>>> 820ee571d26c674d3e36caa75284495fbc17d580
         </group>
     </open-files>
 </project-private>
