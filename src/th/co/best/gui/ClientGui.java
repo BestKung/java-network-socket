@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -38,7 +39,7 @@ import static th.co.best.gui.TestReceiverImageGui.socket;
  *
  * @author BestKung
  */
-public class ClientGui extends javax.swing.JFrame {
+public class ClientGui extends javax.swing.JFrame implements Runnable {
 
     static Socket socket = null;
     static DataOutputStream send = null;
@@ -251,33 +252,62 @@ public class ClientGui extends javax.swing.JFrame {
                 new ClientGui().setVisible(true);
             }
         });
-        socket = new Socket("localhost", 1111);
+        socket = new Socket("192.168.10.212", 1111);
         resived = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         inputFile = new DataInputStream(socket.getInputStream());
+
+        BufferedImage image = null;
         while (true) {
+            System.out.println("Start");
             message = resived.readLine();
-            if (message.equals("file")) {
+            System.out.println(message);
+            System.out.println(new ManageFile().findFile(message));
+            if ("file".equals(new ManageFile().findFile(message))) {
+                String path = "F:\\";
                 String fileName = resived.readLine();
-                fileName = "F:\\" + new ManageFile().findName(fileName);
+                fileName = path + new ManageFile().findName(fileName);
+
+//                if (new File(fileName).exists()) {
+//                    System.out.println("exits");
+//                    Random random = new Random();
+//                    int numberOfFile = random.nextInt(100) + 1;
+//                    fileName = "F:\\" + numberOfFile + new ManageFile().findName(fileName);
+//                }
+
                 System.out.println(fileName);
                 if ((fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("jpg")) || (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("png"))) {
                     System.out.println("image" + fileName);
-                    BufferedImage image = ImageIO.read(ImageIO.createImageInputStream(socket.getInputStream()));
-                    File outputfile = new File(fileName);
-                    System.out.println(fileName.substring(fileName.length() - 3, fileName.length()));
-                    ImageIO.write(image, fileName.substring(fileName.length() - 3, fileName.length()), outputfile);
-
-                    FromDialogShowImage dialogShowImage = new FromDialogShowImage(fileName);
-                    dialogShowImage.setVisible(true);
-                    StyleConstants.setBackground(style, Color.decode("#80deea"));
-                    StyleConstants.setBold(style, true);
-                    doc.insertString(doc.getLength(), "\n Server : ได้รับรูป ", style);
+                    System.out.println();
+                    BufferedImage bufferedImage = ImageIO.read(ImageIO.createImageInputStream(socket.getInputStream()));
+                    if (bufferedImage != null) {
+                        System.out.println("Has image");
+                        image = bufferedImage;
+                        File outputfile = new File(fileName);
+                        System.out.println(fileName.substring(fileName.length() - 3, fileName.length()));
+//                        ImageIO.write(image, fileName.substring(fileName.length() - 3, fileName.length()), outputfile);
+                        ImageIO.write(image, "png", outputfile);
+                        FromDialogShowImage dialogShowImage = new FromDialogShowImage(fileName);
+                        dialogShowImage.setVisible(true);
+                        StyleConstants.setBackground(style, Color.decode("#80deea"));
+                        StyleConstants.setBold(style, true);
+                        doc.insertString(doc.getLength(), "\n Server : ได้รับรูป ", style);
+                    } else {
+                        System.out.println("No image");
+                        fileName = "F:\\" + new ManageFile().findName(fileName);
+                        System.out.println(new ManageFile().reseivedFile(fileName, send, inputFile));
+                        FromDialogShowImage dialogShowImage = new FromDialogShowImage(fileName);
+                        dialogShowImage.setVisible(true);
+                        StyleConstants.setBackground(style, Color.decode("#80deea"));
+                        StyleConstants.setBold(style, true);
+                        doc.insertString(doc.getLength(), "\n Server : ได้รับรูป ", style);
+                    }
                 } else {
                     System.out.println(new ManageFile().reseivedFile(fileName, send, inputFile));
                     StyleConstants.setBackground(style, Color.decode("#80deea"));
                     StyleConstants.setBold(style, true);
                     doc.insertString(doc.getLength(), "\n Server : ได้รับไฟล์ ", style);
                 }
+                System.out.println("continue");
                 continue;
             }
             message = "Server : " + message;
@@ -285,6 +315,7 @@ public class ClientGui extends javax.swing.JFrame {
             StyleConstants.setBold(style, true);
             doc.insertString(doc.getLength(), "\n Server : " + message, style);
         }
+
     }
 
 
@@ -296,4 +327,14 @@ public class ClientGui extends javax.swing.JFrame {
     private javax.swing.JTextField txtSend;
     private static javax.swing.JTextPane txtShow;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(2000);
+            System.out.println("Thread work");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ClientGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

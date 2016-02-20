@@ -5,13 +5,13 @@
  */
 package th.co.best.gui;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.swing.JTextPane;
 
 /**
@@ -39,14 +39,28 @@ public class ManageFile {
     public String reseivedFile(String fileName, DataOutputStream saveFile, DataInputStream inputFile) {
         File file = new File(fileName);
         try {
-            saveFile = new DataOutputStream(new FileOutputStream(file));
-            byte[] buffer = new byte[1024];
-            int len = -1;
-            while ((len = inputFile.read(buffer)) != 1) {
-                saveFile.write(buffer, 0, len);
-                System.out.println(len);
-                if (len < 1024) {
-                    break;
+
+            if ((fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("jpg")) || (fileName.substring(fileName.length() - 3, fileName.length()).equalsIgnoreCase("png"))) {
+                saveFile = new DataOutputStream(new FileOutputStream(file));
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = inputFile.read(buffer)) != 3) {
+                    saveFile.write(buffer, 0, len);
+                    System.out.println(len);
+                    if (len < 1024) {
+                        break;
+                    }
+                }
+            } else {
+                saveFile = new DataOutputStream(new FileOutputStream(file));
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = inputFile.read(buffer)) != 1) {
+                    saveFile.write(buffer, 0, len);
+                    System.out.println(len);
+                    if (len < 1024) {
+                        break;
+                    }
                 }
             }
             return "Save Success";
@@ -67,6 +81,25 @@ public class ManageFile {
             name += c;
         }
         return name;
+    }
+
+    public static String findFile(String message) {
+        String[] result = message.split("1111");
+        return result[result.length - 1];
+    }
+
+    public static int getFilesCount(File file) {
+        File[] files = file.listFiles();
+        int count = 0;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                count += getFilesCount(f);
+            } else {
+                count++;
+            }
+        }
+
+        return count;
     }
 
 }
